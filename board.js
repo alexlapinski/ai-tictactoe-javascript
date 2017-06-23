@@ -17,7 +17,7 @@ class Board {
     static get X_CELL() { return -1; }
     static get O_CELL() { return 1; }
     static get VALID_TILE_VALUES() {
-        return [this.X_CELL, this.O_CELL];
+        return [Board.X_CELL, Board.O_CELL];
     }
 
     constructor(width = 3, height = 3) {
@@ -37,11 +37,11 @@ class Board {
     }
 
     get height() {
-        return _.first(this._board);
+        return _.first(this._board.shape);
     }
 
     get width() {
-        return _.last(this._board);
+        return _.last(this._board.shape);
     }
 
     setTile(x, y, value) {
@@ -53,7 +53,7 @@ class Board {
             throw new Error(`y must be between 0 and ${this.height-1}`)
         }
 
-        if (this.VALID_TILE_VALUES.indexOf(value) == -1) {
+        if (Board.VALID_TILE_VALUES.indexOf(value) == -1) {
             throw new Error(`value must be one of the following values ${validTileValues}`);
         }
 
@@ -79,7 +79,7 @@ class Board {
         for(let x = 0; x < this.width; x++) {
             for(let y = 0; y < this.height; y++) {
                 const val = this.getTile(x, y);
-                if( val === this.EMPTY_CELL) {
+                if( val === Board.EMPTY_CELL) {
                     // Return True if any cells are '0'
                     return true;
                 }
@@ -102,36 +102,36 @@ class Board {
 
         for(let row = 0; row < this.height; row++) {
             const sum = ops.sum(this._board.pick(row));
-            if (sum == this.X_CELL*this.width) {
-                return this.X_CELL;
+            if (sum == Board.X_CELL*this.width) {
+                return Board.X_CELL;
             }
-            if (sum == this.O_CELL*this.width) {
-                return this.O_CELL;
+            if (sum == Board.O_CELL*this.width) {
+                return Board.O_CELL;
             }
         }
 
         for(let col = 0; col < this.width; col++) {
             const sum = ops.sum(this._board.pick(null, col));
-            if (sum == this.X_CELL*this.height) {
-                return this.X_CELL;
+            if (sum == Board.X_CELL*this.height) {
+                return Board.X_CELL;
             }
 
-            if (sum == this.O_CELL*this.height) {
-                return this.O_CELL;
+            if (sum == Board.O_CELL*this.height) {
+                return Board.O_CELL;
             }
         }
 
         const diagArr = diag(this._board);
         const diagSum = ops.sum(diagArr);
-        if ( diagSum == this.X_CELL*diagArr.size) {
-            return this.X_CELL;
+        if ( diagSum == Board.X_CELL*diagArr.size) {
+            return Board.X_CELL;
         }
 
-        if (diagSum == this.O_CELL*diagArr.size) {
-            return this.O_CELL;
+        if (diagSum == Board.O_CELL*diagArr.size) {
+            return Board.O_CELL;
         }
 
-        return this.EMPTY_CELL;
+        return Board.EMPTY_CELL;
     }
 }
 
