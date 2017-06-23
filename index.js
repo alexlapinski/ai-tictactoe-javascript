@@ -1,4 +1,4 @@
-const Board = require('./model');
+const Board = require('./board');
 
 main();
 
