@@ -1,5 +1,5 @@
 const {expect} = require('chai');
-const Board = require('../board');
+const Board = require('../models/board');
 
 
 describe('Board', () => {

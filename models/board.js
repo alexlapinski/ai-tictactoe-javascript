@@ -1,4 +1,3 @@
-const ndarray = require('ndarray');
 const pool = require('ndarray-scratch');
 const ops = require('ndarray-ops');
 const show = require('ndarray-show');
@@ -54,7 +53,7 @@ class Board {
         }
 
         if (Board.VALID_TILE_VALUES.indexOf(value) == -1) {
-            throw new Error(`value must be one of the following values ${validTileValues}`);
+            throw new Error(`value must be one of the following values ${Board.VALID_TILE_VALUES}`);
         }
 
         this._board.set(y, x, value);
