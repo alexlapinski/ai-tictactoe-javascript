@@ -3,7 +3,7 @@ A simple adversarial search implemented in javascript.
 
 [![Coverage Status](https://coveralls.io/repos/github/alexlapinski/ai-tictactoe-javascript/badge.svg)](https://coveralls.io/github/alexlapinski/ai-tictactoe-javascript)
 
-![build status](https://travis-ci.org/alexlapinski/ai-tictactoe-javascript.svg?branch=master])
+[![Build Status](https://travis-ci.org/alexlapinski/ai-tictactoe-javascript.svg?branch=master)](https://travis-ci.org/alexlapinski/ai-tictactoe-javascript)
 
 ## Getting Started
 Follow the following steps to get started.
