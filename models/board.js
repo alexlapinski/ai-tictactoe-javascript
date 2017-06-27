@@ -21,11 +21,11 @@ class Board {
 
     constructor(width = 3, height = 3) {
         if (width <= 0) {
-            throw new Error('width must be greater than zero');
+            throw new RangeError('width must be greater than zero');
         }
 
         if (height <= 0) {
-            throw new Error('height must be greater than zero');
+            throw new RangeError('height must be greater than zero');
         }
 
         this._board = pool.zeros([height, width]);
@@ -45,15 +45,15 @@ class Board {
 
     setTile(x, y, value) {
         if (x < 0 || x >= this.width) {
-            throw new Error(`x must be between 0 and ${this.width-1}`);
+            throw new RangeError(`x must be between 0 and ${this.width-1}`);
         }
 
         if (y < 0 || y >= this.height) {
-            throw new Error(`y must be between 0 and ${this.height-1}`)
+            throw new RangeError(`y must be between 0 and ${this.height-1}`)
         }
 
         if (Board.VALID_TILE_VALUES.indexOf(value) == -1) {
-            throw new Error(`value must be one of the following values ${Board.VALID_TILE_VALUES}`);
+            throw new RangeError(`value must be one of the following values ${Board.VALID_TILE_VALUES}`);
         }
 
         this._board.set(y, x, value);
@@ -61,11 +61,11 @@ class Board {
 
     getTile(x, y) {
         if (x < 0 || x >= this.width) {
-            throw new Error(`x must be between 0 and ${this.width-1}`);
+            throw new RangeError(`x must be between 0 and ${this.width-1}`);
         }
 
         if (y < 0 || y >= this.height) {
-            throw new Error(`y must be between 0 and ${this.height-1}`)
+            throw new RangeError(`y must be between 0 and ${this.height-1}`)
         }
 
         return this._board.get(y, x);
