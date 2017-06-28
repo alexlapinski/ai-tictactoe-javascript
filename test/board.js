@@ -114,6 +114,24 @@ describe('Board', () => {
 
             expect(subject.areMovesAvailable()).to.be.true;
         });
+
+        it('should return false when all tiles are filled', () => {
+            const subject = new Board();
+
+            let move = 0;
+            for( let x = 0; x < subject.width; x++ ) {
+                for( let y = 0; y < subject.width; y++ ) {
+                    if( move % 2 === 0 ) {
+                        subject.setTile(x, y, 1);
+                    } else {
+                        subject.setTile(x, y, -1);
+                    }
+                    move++;
+                }
+            }
+
+            expect(subject.areMovesAvailable()).to.be.false;
+        });
     });
 
 
