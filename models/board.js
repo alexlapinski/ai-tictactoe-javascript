@@ -3,7 +3,6 @@ const ops = require('ndarray-ops');
 const show = require('ndarray-show');
 const diag = require('ndarray-diagonal');
 const _ = require('lodash');
-const Move = require('./move');
 
 /**
  * A simple tic-tac-toe board where
