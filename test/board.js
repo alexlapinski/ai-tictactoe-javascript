@@ -1,5 +1,6 @@
 const {expect} = require('chai');
 const _ = require('lodash');
+const Move = require('../models/move');
 const Board = require('../models/board');
 
 
@@ -21,7 +22,6 @@ describe('Board', () => {
 
     });
 
-
     describe('size', () => {
         it('should be 3x3 for a new board', () => {
             const subject = new Board();
@@ -31,7 +31,6 @@ describe('Board', () => {
         });
 
     });
-
 
     describe('tiles', () => {
         it(`should all be ${Board.EMPTY_CELL} for a new board`, () => {
@@ -108,7 +107,6 @@ describe('Board', () => {
         });
     });
 
-
     describe('#areMovesAvailable()', () => {
         it('should return true for a new board', () => {
             const subject = new Board();
@@ -134,7 +132,6 @@ describe('Board', () => {
             expect(subject.areMovesAvailable()).to.be.false;
         });
     });
-
 
     describe('#checkWinner()', () => {
         it('Board should have no winner for a new board', () => {
@@ -287,6 +284,48 @@ describe('Board', () => {
        });
     });
 
+    describe('#applyMove', () => {
+        const players = [Board.X_CELL, Board.O_CELL];
+
+        _.forEach(players, (player) => {
+            it('should apply a valid move to an empty board.', () => {
+                const board = new Board();
+                const move = new Move(1, 1, player);
+
+                board.applyMove(move);
+
+                for(let x = 0; x < board.width; x++) {
+                    for(let y = 0; y < board.height; y++) {
+                        const cellValue = board.getTile(x, y);
+
+                        if(x === move.x && y == move.y) {
+                            expect(cellValue).to.equal(move.player);
+                        } else {
+                            expect(cellValue).to.equal(Board.EMPTY_CELL);
+                        }
+                    }
+                }
+            });
+        });
+
+        it('should throw error if cell is not empty', () => {
+
+            const board = new Board();
+
+            board.setTile(1, 1, Board.O_CELL);
+            board.setTile(0, 0, Board.X_CELL);
+
+            expect(() => {
+                board.applyMove(new Move(1, 1, Board.X_CELL));
+            }).to.throw(Error, 'empty');
+
+            expect(() => {
+                board.applyMove(new Move(0, 0, Board.O_CELL));
+            }).to.throw(Error, 'empty');
+
+        });
+
+    });
 });
 
 

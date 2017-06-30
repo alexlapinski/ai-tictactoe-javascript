@@ -3,6 +3,7 @@ const ops = require('ndarray-ops');
 const show = require('ndarray-show');
 const diag = require('ndarray-diagonal');
 const _ = require('lodash');
+const Move = require('./move');
 
 /**
  * A simple tic-tac-toe board where
@@ -69,6 +70,14 @@ class Board {
         }
 
         return this._board.get(y, x);
+    }
+
+    applyMove(aMove) {
+        if(this.getTile(aMove.x, aMove.y) !== Board.EMPTY_CELL) {
+            throw new Error('cell must be empty to apply move');
+        }
+
+        this.setTile(aMove.x, aMove.y, aMove.player);
     }
 
     /**
