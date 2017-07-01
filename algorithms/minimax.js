@@ -1,5 +1,5 @@
+const _ = require('lodash');
 const Board = require('../models/board');
-const Move = require('../models/move');
 
 module.exports = {
     getMove
@@ -27,7 +27,7 @@ function getMove(state, player, maxDepth = 3) {
         for( let i = 0, len = actions.length; i < len; i++) {
             let localAction = actions[i];
             let state = state.applyMoveCloning(localAction);
-            let localValue = _min_value(state, maxDepth)
+            let localValue = _minValue(state, maxDepth)
             if (localValue > value) {
                 value = localValue;
                 action = localAction;
@@ -37,7 +37,7 @@ function getMove(state, player, maxDepth = 3) {
         let value = Number.POSITIVE_INFINITY;
         for( let i = 0, len = actions.length; i < len; i++) {
             let localAction = actions[i];
-            let board = state.applyMoveCloning(a);
+            let board = state.applyMoveCloning(localAction);
             let localValue = _maxValue(board, maxDepth);
             if( localValue < value) {
                 value = localValue;
