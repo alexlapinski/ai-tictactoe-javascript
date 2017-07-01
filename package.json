@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "nyc --reporter=html --reporter=text mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint **/*.js"
   },
-  "author": "",
+  "author": "Alex Lapinski <contact@alexlapinski.name>",
   "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.4",

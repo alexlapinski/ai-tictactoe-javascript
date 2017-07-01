@@ -79,6 +79,14 @@ class Board {
         this.setTile(aMove.x, aMove.y, aMove.player);
     }
 
+    applyMoveCloning(aMove) {
+        const clone = _.cloneDeep(this);
+
+        clone.applyMove(aMove);
+
+        return clone;
+    }
+
     /**
      * Returns true if any player can play a move, false if all tiles have been filled.
      */

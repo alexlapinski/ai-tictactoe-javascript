@@ -326,6 +326,48 @@ describe('Board', () => {
         });
 
     });
+
+    describe('#applyMoveCloning', () => {
+        it('should apply a move and not modify the source', () => {
+            const initialState = new Board();
+            const aMove = new Move(0, 0, Board.X_CELL);
+
+            const newState = initialState.applyMoveCloning(aMove);
+
+            expect(newState.width).to.equal(initialState.width);
+            expect(newState.height).to.equal(initialState.height);
+
+            for(let x = 0; x < initialState.width; x++) {
+                for(let y = 0; y < initialState.height; y++) {
+                    expect(initialState.getTile(x, y)).to.equal(Board.EMPTY_CELL);
+                }
+            }
+
+            for(let x = 0; x < newState.width; x++) {
+                for(let y = 0; y < newState.height; y++) {
+                    if( x === aMove.x && y === aMove.y) {
+                        expect(newState.getTile(x, y)).to.equal(aMove.player);
+                    } else {
+                        expect(initialState.getTile(x, y)).to.equal(Board.EMPTY_CELL);
+                    }
+                }
+            }
+        });
+    })
+
+    describe('#availableMoves()', () => {
+       it('should list all moves for empty board', () => {
+
+       });
+
+       it('should return an empty list when game is over', () => {
+
+       });
+
+       it('should return last move when only one move is left', () => {
+
+       });
+    });
 });
 
 
