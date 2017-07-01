@@ -1,4 +1,6 @@
 const Board = require('./models/board');
+const Move = require('./models/move');
+const minimax = require('./algorithms/minimax');
 
 main();
 
@@ -9,11 +11,13 @@ function main() {
     console.log(board.toString());
     console.log();
 
-    board.setTile(1, 1, -1);
-    board.setTile(0, 1, 1);
-    board.setTile(2, 2, -1);
-    board.setTile(0, 0, 1);
+    board.applyMove(new Move(1, 1, Board.X_CELL));
+    board.applyMove(new Move(0, 1, Board.O_CELL));
+    board.applyMove(new Move(2, 2, Board.X_CELL));
+    board.applyMove(new Move(0, 0, Board.O_CELL));
 
-    console.log('After 3 turns');
+    console.log('After 4 moves');
     console.log(board.toString());
+
+    minimax(board);
 }
