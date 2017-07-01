@@ -57,7 +57,7 @@ function _maxValue(state, depth) {
 
     let value = Number.NEGATIVE_INFINITY;
     let moves = state.availableMoves();
-    let successors = _.map(moves, (move) => (state.applyMoveCloning(move));
+    let successors = _.map(moves, (move) => state.applyMoveCloning(move));
     for (let i = 0, len = successors.length; i < len; i++) {
         value = Math.max(value, _minValue(successors[i], depth - 1));
     }
