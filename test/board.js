@@ -2,6 +2,7 @@ const {expect} = require('chai');
 const _ = require('lodash');
 const Move = require('../models/move');
 const Board = require('../models/board');
+const Game = require('../models/game');
 
 
 describe('Board', () => {
@@ -39,7 +40,7 @@ describe('Board', () => {
             for( let x = 0; x < subject.width; x++) {
                 for( let y = 0; y < subject.height; y++) {
                     const val = subject.getTile(x, y);
-                    expect(val).to.equal(Board.EMPTY_CELL);
+                    expect(val).to.equal(Game.EmptyCell);
                 }
             }
         });
@@ -137,12 +138,12 @@ describe('Board', () => {
         it('Board should have no winner for a new board', () => {
             const subject = new Board();
 
-            expect(subject.checkWinner()).to.equal(Board.EMPTY_CELL);
+            expect(subject.checkWinner()).to.equal(Game.EmptyCell);
         });
 
         describe('horizontal winner', () => {
             const maxRows = 3;
-            const players = [Board.X_CELL, Board.O_CELL];
+            const players = Game.Players;
 
             _.each(players, (player) => {
                 for( let row = 0; row < maxRows; row++ ) {
@@ -156,35 +157,35 @@ describe('Board', () => {
                 }
             });
 
-            it(`should have ${Board.X_CELL} as winner when realistic row win exists.`, () => {
+            it(`should have ${Game.PlayerX} as winner when realistic row win exists.`, () => {
                 const subject = new Board();
 
-                subject.setTile(0, 0, Board.X_CELL);
-                subject.setTile(0, 1, Board.O_CELL);
-                subject.setTile(1, 0, Board.X_CELL);
-                subject.setTile(0, 2, Board.O_CELL);
-                subject.setTile(2, 0, Board.X_CELL);
+                subject.setTile(0, 0, Game.PlayerX);
+                subject.setTile(0, 1, Game.PlayerO);
+                subject.setTile(1, 0, Game.PlayerX);
+                subject.setTile(0, 2, Game.PlayerO);
+                subject.setTile(2, 0, Game.PlayerX);
 
-                expect(subject.checkWinner()).to.equal(Board.X_CELL);
+                expect(subject.checkWinner()).to.equal(Game.PlayerX);
             });
 
-            it(`should have ${Board.O_CELL} as winner when realistic row win exists.`, () => {
+            it(`should have ${Game.PlayerO} as winner when realistic row win exists.`, () => {
                 const subject = new Board();
 
-                subject.setTile(1, 1, Board.X_CELL);
-                subject.setTile(0, 0, Board.O_CELL);
-                subject.setTile(2, 2, Board.X_CELL);
-                subject.setTile(1, 0, Board.O_CELL);
-                subject.setTile(0, 1, Board.X_CELL);
-                subject.setTile(2, 0, Board.O_CELL);
+                subject.setTile(1, 1, Game.PlayerX);
+                subject.setTile(0, 0, Game.PlayerO);
+                subject.setTile(2, 2, Game.PlayerX);
+                subject.setTile(1, 0, Game.PlayerO);
+                subject.setTile(0, 1, Game.PlayerX);
+                subject.setTile(2, 0, Game.PlayerO);
 
-                expect(subject.checkWinner()).to.equal(Board.O_CELL);
+                expect(subject.checkWinner()).to.equal(Game.PlayerO);
             });
         });
 
         describe('vertical winner', () => {
             const maxCols = 3;
-            const players = [Board.X_CELL, Board.O_CELL];
+            const players = Game.Players;
 
             _.each(players, (player) => {
                 for( let col = 0; col < maxCols; col++ ) {
@@ -198,34 +199,34 @@ describe('Board', () => {
                 }
             });
 
-            it(`should have ${Board.X_CELL} as winner when realistic col win exists.`, () => {
+            it(`should have ${Game.PlayerX} as winner when realistic col win exists.`, () => {
                 const subject = new Board();
 
-                subject.setTile(0, 0, Board.X_CELL);
-                subject.setTile(1, 0, Board.O_CELL);
-                subject.setTile(0, 1, Board.X_CELL);
-                subject.setTile(2, 0, Board.O_CELL);
-                subject.setTile(0, 2, Board.X_CELL);
+                subject.setTile(0, 0, Game.PlayerX);
+                subject.setTile(1, 0, Game.PlayerO);
+                subject.setTile(0, 1, Game.PlayerX);
+                subject.setTile(2, 0, Game.PlayerO);
+                subject.setTile(0, 2, Game.PlayerX);
 
-                expect(subject.checkWinner()).to.equal(Board.X_CELL);
+                expect(subject.checkWinner()).to.equal(Game.PlayerX);
             });
 
-            it(`should have ${Board.O_CELL} as winner when realistic col win exists.`, () => {
+            it(`should have ${Game.PlayerO} as winner when realistic col win exists.`, () => {
                 const subject = new Board();
 
-                subject.setTile(1, 1, Board.X_CELL);
-                subject.setTile(0, 0, Board.O_CELL);
-                subject.setTile(2, 2, Board.X_CELL);
-                subject.setTile(0, 1, Board.O_CELL);
-                subject.setTile(1, 2, Board.X_CELL);
-                subject.setTile(0, 2, Board.O_CELL);
+                subject.setTile(1, 1, Game.PlayerX);
+                subject.setTile(0, 0, Game.PlayerO);
+                subject.setTile(2, 2, Game.PlayerX);
+                subject.setTile(0, 1, Game.PlayerO);
+                subject.setTile(1, 2, Game.PlayerX);
+                subject.setTile(0, 2, Game.PlayerO);
 
-                expect(subject.checkWinner()).to.equal(Board.O_CELL);
+                expect(subject.checkWinner()).to.equal(Game.PlayerO);
             });
         });
 
         describe('diagonal winner', () => {
-            const players = [Board.X_CELL, Board.O_CELL];
+            const players = Game.Players;
             _.each(players, (player) => {
                 it(`Board should have winner as ${player} when diagonal win exists.`, () => {
                     const subject = new Board();
@@ -238,29 +239,29 @@ describe('Board', () => {
                 });
             });
 
-            it(`should have ${Board.X_CELL} as winner when realistic diagonal win exists.`, () => {
+            it(`should have ${Game.PlayerX} as winner when realistic diagonal win exists.`, () => {
                 const subject = new Board();
 
-                subject.setTile(0, 0, Board.X_CELL);
-                subject.setTile(0, 1, Board.O_CELL);
-                subject.setTile(1, 1, Board.X_CELL);
-                subject.setTile(1, 0, Board.O_CELL);
-                subject.setTile(2, 2, Board.X_CELL);
+                subject.setTile(0, 0, Game.PlayerX);
+                subject.setTile(0, 1, Game.PlayerO);
+                subject.setTile(1, 1, Game.PlayerX);
+                subject.setTile(1, 0, Game.PlayerO);
+                subject.setTile(2, 2, Game.PlayerX);
 
-                expect(subject.checkWinner()).to.equal(Board.X_CELL);
+                expect(subject.checkWinner()).to.equal(Game.PlayerX);
             });
 
-            it(`should have ${Board.O_CELL} as winner when realistic diagonal win exists.`, () => {
+            it(`should have ${Game.PlayerO} as winner when realistic diagonal win exists.`, () => {
                 const subject = new Board();
 
-                subject.setTile(0, 1, Board.X_CELL);
-                subject.setTile(0, 0, Board.O_CELL);
-                subject.setTile(1, 0, Board.X_CELL);
-                subject.setTile(1, 1, Board.O_CELL);
-                subject.setTile(0, 2, Board.X_CELL);
-                subject.setTile(2, 2, Board.O_CELL);
+                subject.setTile(0, 1, Game.PlayerX);
+                subject.setTile(0, 0, Game.PlayerO);
+                subject.setTile(1, 0, Game.PlayerX);
+                subject.setTile(1, 1, Game.PlayerO);
+                subject.setTile(0, 2, Game.PlayerX);
+                subject.setTile(2, 2, Game.PlayerO);
 
-                expect(subject.checkWinner()).to.equal(Board.O_CELL);
+                expect(subject.checkWinner()).to.equal(Game.PlayerO);
             });
         });
 
@@ -285,7 +286,7 @@ describe('Board', () => {
     });
 
     describe('#applyMove', () => {
-        const players = [Board.X_CELL, Board.O_CELL];
+        const players = [Game.PlayerX, Game.PlayerO];
 
         _.forEach(players, (player) => {
             it('should apply a valid move to an empty board.', () => {
@@ -301,7 +302,7 @@ describe('Board', () => {
                         if(x === move.x && y == move.y) {
                             expect(cellValue).to.equal(move.player);
                         } else {
-                            expect(cellValue).to.equal(Board.EMPTY_CELL);
+                            expect(cellValue).to.equal(Game.EmptyCell);
                         }
                     }
                 }
@@ -312,15 +313,15 @@ describe('Board', () => {
 
             const board = new Board();
 
-            board.setTile(1, 1, Board.O_CELL);
-            board.setTile(0, 0, Board.X_CELL);
+            board.setTile(1, 1, Game.PlayerO);
+            board.setTile(0, 0, Game.PlayerX);
 
             expect(() => {
-                board.applyMove(new Move(1, 1, Board.X_CELL));
+                board.applyMove(new Move(1, 1, Game.PlayerX));
             }).to.throw(Error, 'empty');
 
             expect(() => {
-                board.applyMove(new Move(0, 0, Board.O_CELL));
+                board.applyMove(new Move(0, 0, Game.PlayerO));
             }).to.throw(Error, 'empty');
 
         });
@@ -330,7 +331,7 @@ describe('Board', () => {
     describe('#applyMoveCloning', () => {
         it('should apply a move and not modify the source', () => {
             const initialState = new Board();
-            const aMove = new Move(0, 0, Board.X_CELL);
+            const aMove = new Move(0, 0, Game.PlayerX);
 
             const newState = initialState.applyMoveCloning(aMove);
 
@@ -339,7 +340,7 @@ describe('Board', () => {
 
             for(let x = 0; x < initialState.width; x++) {
                 for(let y = 0; y < initialState.height; y++) {
-                    expect(initialState.getTile(x, y)).to.equal(Board.EMPTY_CELL);
+                    expect(initialState.getTile(x, y)).to.equal(Game.EmptyCell);
                 }
             }
 
@@ -348,7 +349,7 @@ describe('Board', () => {
                     if( x === aMove.x && y === aMove.y) {
                         expect(newState.getTile(x, y)).to.equal(aMove.player);
                     } else {
-                        expect(initialState.getTile(x, y)).to.equal(Board.EMPTY_CELL);
+                        expect(initialState.getTile(x, y)).to.equal(Game.EmptyCell);
                     }
                 }
             }
@@ -356,12 +357,52 @@ describe('Board', () => {
     })
 
     describe('#availableMoves()', () => {
-       it('should list all moves for empty board', () => {
+        it('should list all moves for empty board', () => {
+            const board = new Board();
+            const players = Game.Players;
 
-       });
+            const availableMoves = board.availableMoves();
+
+            expect(availableMoves).to.be.an.instanceof(Array);
+            expect(availableMoves.length).to.be.equal(board.width*board.height*players.length);
+
+            for(let p = 0; p < players.length; p++) {
+                const player = players[p];
+
+                    for(let x = 0; x < board.width; x++) {
+                        for(let y = 0; y < board.height; y++) {
+
+                        const expectedMove = new Move(x, y, player);
+                        const actualMove = _.find(availableMoves, {x, y, player});
+
+                        expect(actualMove).to.exist;
+                        expect(actualMove.x).to.equal(expectedMove.x);
+                        expect(actualMove.y).to.equal(expectedMove.y);
+                        expect(actualMove.player).to.equal(expectedMove.player);
+                    }
+                }
+            }
+
+        });
 
        it('should return an empty list when game is over', () => {
+           const board = new Board();
+           const players = Game.Players;
 
+           // Fill Board so the game is over
+           let round = 0;
+           for(let x = 0; x < board.width; x++) {
+               for(let y = 0; y < board.height; y++) {
+                   const player = round % 2 == 0 ? Game.PlayerX : Game.PlayerO;
+                   board.setTile(x, y, player)
+                   round++;
+               }
+           }
+
+           const availableMoves = board.availableMoves();
+
+           expect(availableMoves).to.be.an.instanceof(Array);
+           expect(availableMoves.length).to.be.equal(0);
        });
 
        it('should return last move when only one move is left', () => {

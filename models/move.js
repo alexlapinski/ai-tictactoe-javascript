@@ -1,4 +1,4 @@
-const { VALID_TILE_VALUES } = require('./board');
+const { Players } = require('./game');
 const _ = require('lodash');
 
 class Move {
@@ -13,8 +13,8 @@ class Move {
             throw new RangeError('y must be greater than or equal to zero.');
         }
 
-        if ( _.indexOf(VALID_TILE_VALUES, player) === -1 ) {
-            throw new RangeError(`player must be one of the following values. ${JSON.stringify(VALID_TILE_VALUES)}`);
+        if ( _.indexOf(Players, player) === -1 ) {
+            throw new RangeError(`player must be one of the following values. ${JSON.stringify(Players)}`);
         }
 
 

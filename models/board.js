@@ -3,6 +3,8 @@ const ops = require('ndarray-ops');
 const show = require('ndarray-show');
 const diag = require('ndarray-diagonal');
 const _ = require('lodash');
+const Game = require('./game');
+const Move = require('./move');
 
 /**
  * A simple tic-tac-toe board where
@@ -11,13 +13,6 @@ const _ = require('lodash');
  *  '1' represents 'O'
  */
 class Board {
-
-    static get EMPTY_CELL() { return 0; }
-    static get X_CELL() { return -1; }
-    static get O_CELL() { return 1; }
-    static get VALID_TILE_VALUES() {
-        return [Board.X_CELL, Board.O_CELL];
-    }
 
     constructor(width = 3, height = 3) {
         if (width <= 0) {
@@ -52,8 +47,8 @@ class Board {
             throw new RangeError(`y must be between 0 and ${this.height-1}`)
         }
 
-        if (Board.VALID_TILE_VALUES.indexOf(value) == -1) {
-            throw new RangeError(`value must be one of the following values ${Board.VALID_TILE_VALUES}`);
+        if (Game.Players.indexOf(value) == -1) {
+            throw new RangeError(`value must be one of the following values ${Game.Players}`);
         }
 
         this._board.set(y, x, value);
@@ -71,18 +66,18 @@ class Board {
         return this._board.get(y, x);
     }
 
-    applyMove(aMove) {
-        if(this.getTile(aMove.x, aMove.y) !== Board.EMPTY_CELL) {
+    applyMove(move) {
+        if(this.getTile(move.x, move.y) !== Game.EmptyCell) {
             throw new Error('cell must be empty to apply move');
         }
 
-        this.setTile(aMove.x, aMove.y, aMove.player);
+        this.setTile(move.x, move.y, move.player);
     }
 
-    applyMoveCloning(aMove) {
+    applyMoveCloning(move) {
         const clone = _.cloneDeep(this);
 
-        clone.applyMove(aMove);
+        clone.applyMove(move);
 
         return clone;
     }
@@ -94,7 +89,7 @@ class Board {
         for(let x = 0; x < this.width; x++) {
             for(let y = 0; y < this.height; y++) {
                 const val = this.getTile(x, y);
-                if( val === Board.EMPTY_CELL) {
+                if( val === Game.EmptyCell) {
                     // Return True if any cells are '0'
                     return true;
                 }
@@ -102,6 +97,28 @@ class Board {
         }
 
         return false;
+    }
+
+    /**
+     * Return the list of available moves for the current state of the board.
+     */
+    availableMoves() {
+        const moves = [];
+
+        for(let x = 0; x < this.width; x++) {
+            for(let y = 0; y < this.height; y++) {
+                const val = this.getTile(x, y);
+                if( val === Game.EmptyCell) {
+                    // Add Move for PlayerX
+                    moves.push(new Move(x, y, Game.PlayerX));
+
+                    // Add Move for PlayerO
+                    moves.push(new Move(x, y, Game.PlayerO));
+                }
+            }
+        }
+
+        return moves;
     }
 
     /**
@@ -117,36 +134,36 @@ class Board {
 
         for(let row = 0; row < this.height; row++) {
             const sum = ops.sum(this._board.pick(row));
-            if (sum == Board.X_CELL*this.width) {
-                return Board.X_CELL;
+            if (sum == Game.PlayerX*this.width) {
+                return Game.PlayerX;
             }
-            if (sum == Board.O_CELL*this.width) {
-                return Board.O_CELL;
+            if (sum == Game.PlayerO*this.width) {
+                return Game.PlayerO;
             }
         }
 
         for(let col = 0; col < this.width; col++) {
             const sum = ops.sum(this._board.pick(null, col));
-            if (sum == Board.X_CELL*this.height) {
-                return Board.X_CELL;
+            if (sum == Game.PlayerX*this.height) {
+                return Game.PlayerX;
             }
 
-            if (sum == Board.O_CELL*this.height) {
-                return Board.O_CELL;
+            if (sum == Game.PlayerO*this.height) {
+                return Game.PlayerO;
             }
         }
 
         const diagArr = diag(this._board);
         const diagSum = ops.sum(diagArr);
-        if ( diagSum == Board.X_CELL*diagArr.size) {
-            return Board.X_CELL;
+        if ( diagSum == Game.PlayerX*diagArr.size) {
+            return Game.PlayerX;
         }
 
-        if (diagSum == Board.O_CELL*diagArr.size) {
-            return Board.O_CELL;
+        if (diagSum == Game.PlayerO*diagArr.size) {
+            return Game.PlayerO;
         }
 
-        return Board.EMPTY_CELL;
+        return Game.EmptyCell;
     }
 }
 
