@@ -449,7 +449,7 @@ describe('Board', () => {
 
         });
 
-        it('should list all available moves for 1 move on board (PlayerO\s first turn & X went first)', () => {
+        it('should list all available moves for 1 move on board (PlayerO\'s first turn & X went first)', () => {
             const board = new Board();
 
             // Player X takes first turn
@@ -518,8 +518,6 @@ describe('Board', () => {
                    round++;
                }
            }
-
-           console.log(board.toString());
 
            const availableMoves = board.availableMoves();
 
