@@ -387,7 +387,6 @@ describe('Board', () => {
 
        it('should return an empty list when game is over', () => {
            const board = new Board();
-           const players = Game.Players;
 
            // Fill Board so the game is over
            let round = 0;
