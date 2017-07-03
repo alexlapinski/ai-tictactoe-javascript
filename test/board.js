@@ -33,6 +33,35 @@ describe('Board', () => {
 
     });
 
+    describe('#currentTurn', () => {
+        it('should return PlayerX for a new Board', () => {
+
+            const board = new Board();
+
+            expect(board.currentTurn).to.equal(Game.PlayerX);
+
+        });
+
+        it('should return PlayerO for a board after 1 turn.', () => {
+
+            const board = new Board();
+            board.applyMove(new Move(0, 0, Game.PlayerX));
+
+            expect(board.currentTurn).to.equal(Game.PlayerO);
+
+        });
+
+        it('should return PlayerX for a board after 2 turns.', () => {
+
+            const board = new Board();
+            board.applyMove(new Move(0, 0, Game.PlayerX));
+            board.applyMove(new Move(1, 1, Game.PlayerO));
+
+            expect(board.currentTurn).to.equal(Game.PlayerX);
+
+        });
+    })
+
     describe('tiles', () => {
         it(`should all be ${Board.EMPTY_CELL} for a new board`, () => {
             const subject = new Board();
@@ -45,67 +74,72 @@ describe('Board', () => {
             }
         });
 
-        it('should throw error when setting invalid x', () => {
-            const subject = new Board();
-            expect(() => {
-                subject.setTile(-1, 0, 1);
-            }).to.throw(RangeError, 'x');
+        describe('#setTile()', () => {
+            it('should throw error when setting invalid x', () => {
+                const subject = new Board();
+                expect(() => {
+                    subject.setTile(-1, 0, 1);
+                }).to.throw(RangeError, 'x');
 
-            expect(() => {
-                subject.setTile(3, 0, 1);
-            }).to.throw(RangeError, 'x');
+                expect(() => {
+                    subject.setTile(3, 0, 1);
+                }).to.throw(RangeError, 'x');
+            });
+
+            it('should throw error when setting invalid y', () => {
+                const subject = new Board();
+                expect(() => {
+                    subject.setTile(0, -1, 1);
+                }).to.throw(RangeError, 'y');
+
+                expect(() => {
+                    subject.setTile(0, 3, 1);
+                }).to.throw(RangeError, 'y');
+            });
+
+            it('should throw error when setting invalid cell value', () => {
+                const subject = new Board();
+                expect(() => {
+                    subject.setTile(0, 0, 2);
+                }).to.throw(RangeError, 'value');
+            });
+
+            it('should be set to a new value', () => {
+                const subject = new Board();
+                const x = 1, y = 1;
+
+                expect(subject.getTile(x, y)).to.equal(0);
+
+                subject.setTile(x, y, -1);
+
+                expect(subject.getTile(x, y)).to.equal(-1);
+            });
         });
 
-        it('should throw error when setting invalid y', () => {
-            const subject = new Board();
-            expect(() => {
-                subject.setTile(0, -1, 1);
-            }).to.throw(RangeError, 'y');
+        describe('#getTile()', () => {
+            it('should throw error when getting invalid x', () => {
+                const subject = new Board();
+                expect(() => {
+                    subject.getTile(-1, 0);
+                }).to.throw(RangeError, 'x');
 
-            expect(() => {
-                subject.setTile(0, 3, 1);
-            }).to.throw(RangeError, 'y');
+                expect(() => {
+                    subject.getTile(4, 0);
+                }).to.throw(RangeError, 'x');
+            });
+
+            it('should throw error when getting invalid y', () => {
+                const subject = new Board();
+                expect(() => {
+                    subject.getTile(0, -1);
+                }).to.throw(RangeError, 'y');
+
+                expect(() => {
+                    subject.getTile(0, 4);
+                }).to.throw(RangeError, 'y');
+            });
         });
 
-        it('should throw error when setting invalid cell value', () => {
-            const subject = new Board();
-            expect(() => {
-                subject.setTile(0, 0, 2);
-            }).to.throw(RangeError, 'value');
-        });
-
-        it('should be set to a new value', () => {
-            const subject = new Board();
-            const x = 1, y = 1;
-
-            expect(subject.getTile(x, y)).to.equal(0);
-
-            subject.setTile(x, y, -1);
-
-            expect(subject.getTile(x, y)).to.equal(-1);
-        });
-
-        it('should throw error when getting invalid x', () => {
-            const subject = new Board();
-            expect(() => {
-                subject.getTile(-1, 0);
-            }).to.throw(RangeError, 'x');
-
-            expect(() => {
-                subject.getTile(4, 0);
-            }).to.throw(RangeError, 'x');
-        });
-
-        it('should throw error when getting invalid y', () => {
-            const subject = new Board();
-            expect(() => {
-                subject.getTile(0, -1);
-            }).to.throw(RangeError, 'y');
-
-            expect(() => {
-                subject.getTile(0, 4);
-            }).to.throw(RangeError, 'y');
-        });
     });
 
     describe('#areMovesAvailable()', () => {
@@ -286,27 +320,41 @@ describe('Board', () => {
     });
 
     describe('#applyMove', () => {
-        const players = [Game.PlayerX, Game.PlayerO];
+        it('should apply a valid move to an empty board.', () => {
+            const board = new Board();
+            const firstMove = new Move(1, 1, Game.PlayerX);
 
-        _.forEach(players, (player) => {
-            it('should apply a valid move to an empty board.', () => {
-                const board = new Board();
-                const move = new Move(1, 1, player);
+            board.applyMove(firstMove);
 
-                board.applyMove(move);
+            for(let x = 0; x < board.width; x++) {
+                for(let y = 0; y < board.height; y++) {
+                    const cellValue = board.getTile(x, y);
 
-                for(let x = 0; x < board.width; x++) {
-                    for(let y = 0; y < board.height; y++) {
-                        const cellValue = board.getTile(x, y);
-
-                        if(x === move.x && y == move.y) {
-                            expect(cellValue).to.equal(move.player);
-                        } else {
-                            expect(cellValue).to.equal(Game.EmptyCell);
-                        }
+                    if(x === firstMove.x && y === firstMove.y) {
+                        expect(cellValue).to.equal(firstMove.player);
+                    } else {
+                        expect(cellValue).to.equal(Game.EmptyCell);
                     }
                 }
-            });
+            }
+
+            const secondMove = new Move(0, 0, Game.PlayerO);
+
+            board.applyMove(secondMove);
+
+            for(let x = 0; x < board.width; x++) {
+                for(let y = 0; y < board.height; y++) {
+                    const cellValue = board.getTile(x, y);
+
+                    if(x === firstMove.x && y === firstMove.y) {
+                        expect(cellValue).to.equal(firstMove.player);
+                    } else if( x === secondMove.x && y === secondMove.y ) {
+                        expect(cellValue).to.equal(secondMove.player);
+                    } else {
+                        expect(cellValue).to.equal(Game.EmptyCell);
+                    }
+                }
+            }
         });
 
         it('should throw error if cell is not empty', () => {
@@ -326,6 +374,28 @@ describe('Board', () => {
 
         });
 
+        it('should throw an error if the PlayerO tries to go first', () => {
+            const board = new Board();
+
+            // The First turn is always PlayerX
+            expect(() => {
+                board.applyMove(new Move(0, 0, Game.PlayerO));
+            }).to.throw(Error, 'player');
+
+            expect(board.getTile(0, 0), 'Expected cell to not change').to.equal(Game.EmptyCell);
+        });
+
+        it('should throw an error if PlayerX tries to go twice.', () => {
+            const board = new Board();
+            board.applyMove(new Move(1, 1, Game.PlayerX));
+
+            // The First turn is always PlayerX
+            expect(() => {
+                board.applyMove(new Move(0, 0, Game.PlayerX));
+            }).to.throw(Error, 'player');
+
+            expect(board.getTile(0, 0), 'Expected cell to not change').to.equal(Game.EmptyCell);
+        });
     });
 
     describe('#applyMoveCloning', () => {
@@ -357,29 +427,54 @@ describe('Board', () => {
     })
 
     describe('#availableMoves()', () => {
-        it('should list all moves for empty board', () => {
+        it('should list all moves for empty board (X goes first)', () => {
             const board = new Board();
-            const players = Game.Players;
 
             const availableMoves = board.availableMoves();
 
             expect(availableMoves).to.be.an.instanceof(Array);
-            expect(availableMoves.length).to.be.equal(board.width*board.height*players.length);
+            expect(availableMoves.length).to.be.equal(board.width*board.height);
 
-            for(let p = 0; p < players.length; p++) {
-                const player = players[p];
+            for(let x = 0; x < board.width; x++) {
+                for(let y = 0; y < board.height; y++) {
 
-                    for(let x = 0; x < board.width; x++) {
-                        for(let y = 0; y < board.height; y++) {
+                    const actualMove = _.find(availableMoves, {x, y});
 
-                        const expectedMove = new Move(x, y, player);
-                        const actualMove = _.find(availableMoves, {x, y, player});
+                    expect(actualMove).to.exist;
+                    expect(actualMove.x).to.equal(x);
+                    expect(actualMove.y).to.equal(y);
+                    expect(actualMove.player).to.equal(Game.PlayerX);
+                }
+            }
 
-                        expect(actualMove).to.exist;
-                        expect(actualMove.x).to.equal(expectedMove.x);
-                        expect(actualMove.y).to.equal(expectedMove.y);
-                        expect(actualMove.player).to.equal(expectedMove.player);
+        });
+
+        it('should list all available moves for 1 move on board (PlayerO\s first turn & X went first)', () => {
+            const board = new Board();
+
+            // Player X takes first turn
+            board.applyMove(new Move(1, 1, Game.PlayerX));
+
+            const availableMoves = board.availableMoves();
+
+            expect(availableMoves).to.be.an.instanceof(Array);
+
+            const expectedNumberOfMoves = (board.width * board.height) - 1;
+            expect(availableMoves.length).to.equal(expectedNumberOfMoves);
+
+            for(let x = 0; x < board.width; x++) {
+                for(let y = 0; y < board.height; y++) {
+
+                    if (x === 1 && y === 1) {
+                        continue; // this was X's first turn
                     }
+
+                    const actualMove = _.find(availableMoves, move => move.x === x && move.y === y);
+
+                    expect(actualMove, `actualMove=${actualMove}`).to.exist;
+                    expect(actualMove.x).to.equal(x);
+                    expect(actualMove.y).to.equal(y);
+                    expect(actualMove.player).to.equal(Game.PlayerO);
                 }
             }
 
@@ -393,7 +488,7 @@ describe('Board', () => {
            for(let x = 0; x < board.width; x++) {
                for(let y = 0; y < board.height; y++) {
                    const player = round % 2 == 0 ? Game.PlayerX : Game.PlayerO;
-                   board.setTile(x, y, player)
+                   board.applyMove(new Move(x, y, player));
                    round++;
                }
            }
@@ -405,7 +500,44 @@ describe('Board', () => {
        });
 
        it('should return last move when only one move is left', () => {
+           const board = new Board();
 
+           const maxRounds = board.width*board.height;
+           const secondToLastRound = maxRounds - 1;
+
+           // Fill Board so the game is over
+           let round = 0;
+           for(let x = 0; x < board.width; x++) {
+               for(let y = 0; y < board.height; y++) {
+                   if (round === secondToLastRound) {
+                       break;
+                   }
+                   const player = round % 2 == 0 ? Game.PlayerX : Game.PlayerO;
+                   const move = new Move(x, y, player);
+                   board.applyMove(move);
+                   round++;
+               }
+           }
+
+           console.log(board.toString());
+
+           const availableMoves = board.availableMoves();
+
+           expect(availableMoves).to.be.an.instanceof(Array);
+           expect(availableMoves.length).to.be.equal(1);
+
+           const lastMove = _.first(availableMoves);
+           expect(lastMove).to.exist;
+
+           // The way we filled the board above is from top-left to bottom-right
+           // so our last move should be the bottom-right corner
+           expect(lastMove.x).to.equal(board.width-1);
+           expect(lastMove.y).to.equal(board.height-1);
+
+           // We filled the board with even rounds being 'X'
+           // there are 9 total moves in the board (width:3 * height:3 = moves:9), starting at 0
+           // so the last move is for player 'X'
+           expect(lastMove.player).to.equal(Game.PlayerX, 'Expected PlayerX');
        });
     });
 });

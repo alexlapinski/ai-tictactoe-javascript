@@ -24,6 +24,7 @@ class Board {
         }
 
         this._board = pool.zeros([height, width]);
+        this._currentTurn = Game.PlayerX;
     }
 
     toString() {
@@ -38,6 +39,11 @@ class Board {
         return _.last(this._board.shape);
     }
 
+    get currentTurn() {
+        return this._currentTurn;
+    }
+
+    // TODO: Make this internal so only applyMove can mutate the state
     setTile(x, y, value) {
         if (x < 0 || x >= this.width) {
             throw new RangeError(`x must be between 0 and ${this.width-1}`);
@@ -71,7 +77,24 @@ class Board {
             throw new Error('cell must be empty to apply move');
         }
 
+        let nextPlayer;
+        if (move.player === Game.PlayerX) {
+            nextPlayer = Game.PlayerO;
+        }
+        else if( move.player === Game.PlayerO) {
+            nextPlayer = Game.PlayerX;
+        }
+        else {
+            throw new Error(`Unknown Player ${move.player}`);
+        }
+
+        if (move.player !== this._currentTurn) {
+            throw new Error(`The board's current player is ${this._currentTurn} but a move for player `+
+                `${move.player} was attempted.`);
+        }
+
         this.setTile(move.x, move.y, move.player);
+        this._currentTurn = nextPlayer;
     }
 
     applyMoveCloning(move) {
@@ -109,11 +132,7 @@ class Board {
             for(let y = 0; y < this.height; y++) {
                 const val = this.getTile(x, y);
                 if( val === Game.EmptyCell) {
-                    // Add Move for PlayerX
-                    moves.push(new Move(x, y, Game.PlayerX));
-
-                    // Add Move for PlayerO
-                    moves.push(new Move(x, y, Game.PlayerO));
+                    moves.push(new Move(x, y, this._currentTurn));
                 }
             }
         }
