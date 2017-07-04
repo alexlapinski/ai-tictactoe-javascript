@@ -73,6 +73,10 @@ class Board {
     }
 
     applyMove(move) {
+        if( !(move instanceof Move) ) {
+            throw new Error('move must be an instanceof Move');
+        }
+
         if(this.getTile(move.x, move.y) !== Game.EmptyCell) {
             throw new Error('cell must be empty to apply move');
         }
@@ -83,9 +87,6 @@ class Board {
         }
         else if( move.player === Game.PlayerO) {
             nextPlayer = Game.PlayerX;
-        }
-        else {
-            throw new Error(`Unknown Player ${move.player}`);
         }
 
         if (move.player !== this._currentTurn) {

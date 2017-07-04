@@ -320,6 +320,14 @@ describe('Board', () => {
     });
 
     describe('#applyMove', () => {
+        it('should throw an error with invalid parameters', () => {
+           const board = new Board();
+
+           expect(() => {
+               board.applyMove({x:1, y:1, player:1});
+           }).to.throw(Error, 'Move');
+        });
+
         it('should apply a valid move to an empty board.', () => {
             const board = new Board();
             const firstMove = new Move(1, 1, Game.PlayerX);
