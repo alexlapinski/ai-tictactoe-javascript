@@ -12,7 +12,7 @@
   "author": "Alex Lapinski <contact@alexlapinski.name>",
   "license": "MIT",
   "dependencies": {
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "ndarray": "^1.0.18",
     "ndarray-diagonal": "^1.0.0",
     "ndarray-ops": "^1.2.2",
